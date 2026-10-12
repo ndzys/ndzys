@@ -144,7 +144,7 @@ export default function ShipIt({ onClose }: { onClose: () => void }) {
           ref={canvasRef}
           className="game__canvas"
           role="img"
-          aria-label="Runner game: jump over blockers and collect coffee to ship code"
+          aria-label="Runner game: jump over blockers and collect snacks to ship code"
         />
       </motion.div>
     </motion.div>

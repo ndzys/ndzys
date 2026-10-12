@@ -7,6 +7,7 @@ import {
   createGame,
   jump,
   obstacleWidth,
+  pickupFor,
   releaseJump,
   restart,
   score,
@@ -108,18 +109,31 @@ describe('game engine', () => {
     expect(game.status).toBe('running');
   });
 
-  it('adds a bonus for coffee and counts distance', () => {
+  it('adds the pickup bonus to the distance score', () => {
     const game = createGame(720, fixedRandom);
     start(game);
     game.untilSpawn = Infinity;
-    game.coffees.push({ x: PLAYER_X + PLAYER_SIZE / 2, y: GROUND - PLAYER_SIZE / 2, taken: false });
+    game.pickups.push({ x: PLAYER_X + PLAYER_SIZE / 2, y: GROUND - PLAYER_SIZE / 2, kind: 'smoothie', points: 40, taken: false });
     step(game, FRAME);
-    expect(game.bonus).toBe(25);
-    expect(game.coffees).toHaveLength(0);
-    expect(score(game)).toBe(Math.floor(game.distance / 20) + 25);
+    expect(game.bonus).toBe(40);
+    expect(game.pickups).toHaveLength(0);
+    expect(game.popups[0].text).toBe('+40 smoothie');
+    expect(score(game)).toBe(Math.floor(game.distance / 20) + 40);
   });
 
-  it('leaves room to land, grab the coffee and clear the next blocker', () => {
+  it('rolls common pickups more often than rare ones', () => {
+    const counts = new Map<string, number>();
+    for (let i = 0; i < 1000; i++) {
+      const { kind } = pickupFor(i / 1000);
+      counts.set(kind, (counts.get(kind) ?? 0) + 1);
+    }
+    expect(pickupFor(0).kind).toBe('coffee');
+    expect(pickupFor(0.999).kind).toBe('React');
+    expect(counts.get('coffee')).toBeGreaterThan(counts.get('smoothie')!);
+    expect(counts.get('smoothie')).toBeGreaterThan(counts.get('React')!);
+  });
+
+  it('leaves room to land, grab the pickup and clear the next blocker', () => {
     const rolls = [0.5, 0.5, 0.1, 0.5];
     let calls = 0;
     const game = createGame(720, () => rolls[calls++ % rolls.length]);
@@ -127,8 +141,8 @@ describe('game engine', () => {
     game.untilSpawn = 0;
     step(game, FRAME);
     const [first] = game.obstacles;
-    const [coffee] = game.coffees;
-    expect(coffee.x).toBeGreaterThan(first.x + first.w);
+    const [pickup] = game.pickups;
+    expect(pickup.x).toBeGreaterThan(first.x + first.w);
 
     const jumpWhen = (isClose: () => boolean) => {
       while (!isClose() && game.status === 'running') step(game, FRAME);
@@ -137,8 +151,8 @@ describe('game engine', () => {
     };
 
     jumpWhen(() => game.obstacles[0].x < PLAYER_X + PLAYER_SIZE + 40);
-    jumpWhen(() => game.coffees[0].x < PLAYER_X + PLAYER_SIZE + 60);
-    expect(game.bonus).toBe(25);
+    jumpWhen(() => game.pickups[0].x < PLAYER_X + PLAYER_SIZE + 60);
+    expect(game.bonus).toBe(pickup.points);
 
     const next = game.obstacles.find((o) => o.x > PLAYER_X);
     expect(next).toBeDefined();

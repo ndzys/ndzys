@@ -1,4 +1,4 @@
-import { GROUND, HEIGHT, PLAYER_SIZE, PLAYER_X, score, type Game, type GameEvent } from './engine';
+import { GROUND, HEIGHT, PLAYER_SIZE, PLAYER_X, score, type Game, type GameEvent, type PickupKind } from './engine';
 
 type RGB = [number, number, number];
 
@@ -55,6 +55,15 @@ const WINDOW_LIGHT = '#F5C46B';
 const DAY_LENGTH = 24000;
 const GLYPHS = ['</>', '{ }', '=>', 'npm i', 'git push', '&&', '[...]', 'async', '#fff', '200 OK', '<div>', '?.'];
 const DANGEROUS = new Set(['prod bug', 'flaky test', 'merge conflict']);
+
+const PICKUP_LOOK: Record<PickupKind, { emoji: string; glow: string }> = {
+  coffee: { emoji: '☕', glow: '159,212,245' },
+  smoothie: { emoji: '🥤', glow: '246,165,192' },
+  'bubble tea': { emoji: '🧋', glow: '232,201,160' },
+  matcha: { emoji: '🍵', glow: '155,211,154' },
+  'avocado toast': { emoji: '🥑', glow: '181,217,156' },
+  React: { emoji: '⚛️', glow: '97,218,251' },
+};
 
 const mix = (a: RGB, b: RGB, t: number): RGB => [
   a[0] + (b[0] - a[0]) * t,
@@ -156,9 +165,11 @@ export function applyEvents(fx: Fx, game: Game, events: GameEvent[]) {
         fx.squash = 1;
         burst(fx, feetX, GROUND, 10, { spread: 0.9, speed: 140, angle: Math.PI, colors: ['#B8B2A7', '#CFC9BE'], life: 0.45, size: 3, gravity: 300 });
         break;
-      case 'coffee':
-        burst(fx, event.x, event.y, 18, { spread: Math.PI * 2, speed: 160, colors: [GLOW, ACCENT, '#FFFFFF'], life: 0.7, size: 3 });
+      case 'pickup': {
+        const glow = `rgb(${PICKUP_LOOK[event.kind].glow})`;
+        burst(fx, event.x, event.y, 18, { spread: Math.PI * 2, speed: 160, colors: [glow, ACCENT, '#FFFFFF'], life: 0.7, size: 3 });
         break;
+      }
       case 'crash':
         fx.shake = 12;
         fx.flash = 1;
@@ -360,19 +371,20 @@ function drawObstacles(ctx: CanvasRenderingContext2D, game: Game, palette: Palet
   }
 }
 
-function drawCoffees(ctx: CanvasRenderingContext2D, game: Game) {
+function drawPickups(ctx: CanvasRenderingContext2D, game: Game) {
   ctx.font = '20px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  for (const c of game.coffees) {
-    const y = c.y + Math.sin(game.time * 4 + c.x * 0.05) * 3;
+  for (const p of game.pickups) {
+    const { emoji, glow } = PICKUP_LOOK[p.kind];
+    const y = p.y + Math.sin(game.time * 4 + p.x * 0.05) * 3;
     const pulse = 1 + Math.sin(game.time * 6) * 0.12;
-    const halo = ctx.createRadialGradient(c.x, y, 2, c.x, y, 26 * pulse);
-    halo.addColorStop(0, 'rgba(159,212,245,0.75)');
-    halo.addColorStop(1, 'rgba(159,212,245,0)');
+    const halo = ctx.createRadialGradient(p.x, y, 2, p.x, y, 26 * pulse);
+    halo.addColorStop(0, `rgba(${glow},0.75)`);
+    halo.addColorStop(1, `rgba(${glow},0)`);
     ctx.fillStyle = halo;
-    ctx.fillRect(c.x - 30, y - 30, 60, 60);
-    ctx.fillText('☕', c.x, y + 1);
+    ctx.fillRect(p.x - 30, y - 30, 60, 60);
+    ctx.fillText(emoji, p.x, y + 1);
   }
   ctx.textAlign = 'start';
 }
@@ -528,7 +540,7 @@ function drawMessage(ctx: CanvasRenderingContext2D, game: Game, palette: Palette
       ctx.fillText(touch ? 'tap to redeploy' : 'space or tap to redeploy', cx, 150);
     }
   } else {
-    ctx.fillText('jump over the blockers · grab the coffee', cx, 126);
+    ctx.fillText('jump the blockers · refuel on the way', cx, 126);
     ctx.fillStyle = rgba(palette.ink);
     if (Math.sin(game.time * 4) > -0.3) ctx.fillText(touch ? 'tap to start' : 'space or tap to start', cx, 150);
   }
@@ -553,7 +565,7 @@ export function draw(
   drawGlyphs(ctx, game, palette);
   drawFloor(ctx, game, palette, night);
   drawStreaks(ctx, fx, palette);
-  drawCoffees(ctx, game);
+  drawPickups(ctx, game);
   drawObstacles(ctx, game, palette, night);
   drawPlayer(ctx, game, fx, palette, opts.image);
   drawParticles(ctx, fx);

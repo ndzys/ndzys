@@ -9,10 +9,10 @@ const SHORT_HOP_VELOCITY = -320;
 const START_SPEED = 340;
 const ACCELERATION = 12;
 const MAX_SPEED = 820;
-const COFFEE_BONUS = 25;
-const COFFEE_HEIGHT = 96;
-const COFFEE_LEAD = 0.8;
-const COFFEE_GAP = 1.75;
+const PICKUP_CHANCE = 0.35;
+const PICKUP_HEIGHT = 96;
+const PICKUP_LEAD = 0.8;
+const PICKUP_GAP = 1.75;
 const HITBOX_INSET = 5;
 export const MILESTONE = 250;
 
@@ -27,14 +27,35 @@ export const OBSTACLE_LABELS = [
   'TODO',
 ] as const;
 
+export const PICKUPS = [
+  { kind: 'coffee', points: 25, weight: 5 },
+  { kind: 'smoothie', points: 40, weight: 3 },
+  { kind: 'bubble tea', points: 50, weight: 2 },
+  { kind: 'matcha', points: 60, weight: 2 },
+  { kind: 'avocado toast', points: 75, weight: 1 },
+  { kind: 'React', points: 100, weight: 1 },
+] as const;
+
+export type PickupKind = (typeof PICKUPS)[number]['kind'];
 export type Obstacle = { x: number; w: number; h: number; label: string };
-export type Coffee = { x: number; y: number; taken: boolean };
+export type Pickup = { x: number; y: number; kind: PickupKind; points: number; taken: boolean };
+
+const TOTAL_WEIGHT = PICKUPS.reduce((sum, p) => sum + p.weight, 0);
+
+export function pickupFor(roll: number) {
+  let threshold = roll * TOTAL_WEIGHT;
+  for (const pickup of PICKUPS) {
+    threshold -= pickup.weight;
+    if (threshold < 0) return pickup;
+  }
+  return PICKUPS[PICKUPS.length - 1];
+}
 export type Popup = { x: number; y: number; text: string; age: number };
 export type Status = 'ready' | 'running' | 'over';
 export type GameEvent =
   | { type: 'jump' }
   | { type: 'land' }
-  | { type: 'coffee'; x: number; y: number }
+  | { type: 'pickup'; kind: PickupKind; x: number; y: number }
   | { type: 'crash' }
   | { type: 'milestone'; version: number };
 
@@ -48,7 +69,7 @@ export type Game = {
   time: number;
   player: { y: number; vy: number; grounded: boolean };
   obstacles: Obstacle[];
-  coffees: Coffee[];
+  pickups: Pickup[];
   popups: Popup[];
   untilSpawn: number;
   nextMilestone: number;
@@ -69,7 +90,7 @@ export function createGame(width: number, random: () => number = Math.random): G
     time: 0,
     player: { y: GROUND - PLAYER_SIZE, vy: 0, grounded: true },
     obstacles: [],
-    coffees: [],
+    pickups: [],
     popups: [],
     untilSpawn: width * 0.6,
     nextMilestone: MILESTONE,
@@ -106,9 +127,10 @@ function spawn(game: Game) {
   const w = obstacleWidth(label);
   game.obstacles.push({ x: width + 20, w, h, label });
 
-  if (random() < 0.35) {
-    game.coffees.push({ x: width + 20 + w + speed * COFFEE_LEAD, y: GROUND - COFFEE_HEIGHT, taken: false });
-    game.untilSpawn = w + speed * (COFFEE_GAP + random() * 0.4);
+  if (random() < PICKUP_CHANCE) {
+    const { kind, points } = pickupFor(random());
+    game.pickups.push({ x: width + 20 + w + speed * PICKUP_LEAD, y: GROUND - PICKUP_HEIGHT, kind, points, taken: false });
+    game.untilSpawn = w + speed * (PICKUP_GAP + random() * 0.4);
   } else {
     game.untilSpawn = w + speed * (0.9 + random() * 0.9);
   }
@@ -141,7 +163,7 @@ export function step(game: Game, dt: number) {
   }
 
   for (const o of game.obstacles) o.x -= dx;
-  for (const c of game.coffees) c.x -= dx;
+  for (const p of game.pickups) p.x -= dx;
   game.obstacles = game.obstacles.filter((o) => o.x + o.w > -20);
 
   game.untilSpawn -= dx;
@@ -151,15 +173,15 @@ export function step(game: Game, dt: number) {
   const cx = PLAYER_X + r;
   const cy = player.y + r;
 
-  for (const c of game.coffees) {
-    if ((cx - c.x) ** 2 + (cy - c.y) ** 2 < (r + 10) ** 2) {
-      c.taken = true;
-      game.bonus += COFFEE_BONUS;
-      game.popups.push({ x: c.x, y: c.y - 16, text: `+${COFFEE_BONUS}`, age: 0 });
-      game.events.push({ type: 'coffee', x: c.x, y: c.y });
+  for (const p of game.pickups) {
+    if ((cx - p.x) ** 2 + (cy - p.y) ** 2 < (r + 10) ** 2) {
+      p.taken = true;
+      game.bonus += p.points;
+      game.popups.push({ x: p.x, y: p.y - 16, text: `+${p.points} ${p.kind}`, age: 0 });
+      game.events.push({ type: 'pickup', kind: p.kind, x: p.x, y: p.y });
     }
   }
-  game.coffees = game.coffees.filter((c) => c.x > -20 && !c.taken);
+  game.pickups = game.pickups.filter((p) => p.x > -20 && !p.taken);
 
   if (score(game) >= game.nextMilestone) {
     game.events.push({ type: 'milestone', version: game.nextMilestone / MILESTONE });
