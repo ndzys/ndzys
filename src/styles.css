@@ -1,0 +1,473 @@
+:root {
+  --bg: #f4f3f0;
+  --ink: #0b0b0c;
+  --muted: #55555b;
+  --line: #d6d3cc;
+  --accent: #1f6f9f;
+  --accent-deep: #1f3a5f;
+  --accent-glow: #9fd4f5;
+  --photo-bg: #ece9e3;
+  --sk: #e6e3dd;
+  --sk-hi: #f1efea;
+  --term-bg: #0b0b0c;
+  --term-ink: #d9dce1;
+  --term-dim: #8e95a0;
+  --term-ok: #6fd39a;
+
+  --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --gutter: clamp(20px, 4vw, 40px);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+.serif {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ── Layout ─────────────────────────────────────────── */
+
+.page {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+}
+
+.header {
+  max-width: 1160px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(16px, 3vw, 24px) var(--gutter);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+  font-size: 14px;
+}
+
+.header__name {
+  font-weight: 500;
+}
+
+.header__actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.header__lock {
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.25s;
+}
+
+.header__lock:hover {
+  color: var(--ink);
+}
+
+.header__cv {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  max-width: 1160px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 8px var(--gutter) clamp(32px, 6vh, 64px);
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(24px, 5vw, 80px);
+  width: 100%;
+}
+
+.panels {
+  flex: 1 1 340px;
+  min-width: 0;
+  display: grid;
+}
+
+.panel {
+  grid-area: 1 / 1;
+  align-self: center;
+}
+
+/* ── Portrait ───────────────────────────────────────── */
+
+.portrait {
+  position: relative;
+  flex: 0 0 auto;
+  width: min(clamp(210px, 42vw, 380px), calc(100svh - 200px));
+  min-width: 180px;
+  margin: 0 auto;
+}
+
+.portrait__frame {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--photo-bg);
+  /* Keeps the rounded clip crisp in Safari while children transform. */
+  isolation: isolate;
+}
+
+.portrait__pending {
+  position: absolute;
+  inset: 46% 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px;
+}
+
+.portrait__file {
+  margin-top: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.portrait__backdrop,
+.portrait__photo {
+  position: absolute;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.portrait__backdrop {
+  inset: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  filter: blur(22px) saturate(1.2);
+}
+
+.portrait__photo {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.portrait__scan-track {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.portrait__scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
+  background: var(--accent-glow);
+  box-shadow:
+    0 0 12px 2px rgba(31, 111, 159, 0.9),
+    0 0 40px 8px rgba(159, 212, 245, 0.5);
+}
+
+.portrait__badge {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(11, 11, 12, 0.75);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Skeleton ───────────────────────────────────────── */
+
+.shimmer {
+  display: block;
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--sk) 0%, var(--sk) 40%, var(--sk-hi) 50%, var(--sk) 60%, var(--sk) 100%);
+  background-size: 250% 100%;
+  background-position: 150% 0%;
+}
+
+/* ── Panels ─────────────────────────────────────────── */
+
+.eyebrow {
+  margin: 0 0 18px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.headline {
+  margin: 0;
+  max-width: 560px;
+  font-weight: 500;
+  font-size: clamp(36px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.status {
+  display: grid;
+  margin-top: 28px;
+  max-width: 480px;
+  min-height: 176px;
+}
+
+.status > * {
+  grid-area: 1 / 1;
+}
+
+.status__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-self: start;
+}
+
+.terminal {
+  min-height: 176px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--term-bg);
+  color: var(--term-ink);
+  font-family: var(--mono);
+  font-size: clamp(11px, 2.9vw, 12.5px);
+  line-height: 1.75;
+  box-shadow: 0 20px 40px -24px rgba(11, 11, 12, 0.6);
+  transform-origin: 50% 0;
+}
+
+.terminal__cmd {
+  color: var(--term-dim);
+}
+
+.terminal__line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal__ok {
+  color: var(--term-ok);
+}
+
+.terminal__caret {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: var(--accent-glow);
+  vertical-align: -2px;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 32px;
+}
+
+.note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.name {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(56px, 8.4vw, 112px);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.name:focus-visible {
+  outline: none;
+}
+
+.name__line {
+  display: block;
+}
+
+.bio {
+  margin: 22px 0 0;
+  max-width: 470px;
+  font-size: clamp(17px, 1.6vw, 19px);
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.location {
+  margin: 14px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.contacts {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 14px;
+}
+
+.contacts a {
+  color: var(--muted);
+  transition: color 0.25s;
+}
+
+.contacts a:hover {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* ── Buttons ────────────────────────────────────────── */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  white-space: nowrap;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    background-color 0.25s,
+    border-color 0.25s;
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn--primary {
+  border: 0;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--accent-deep);
+}
+
+.btn--outline {
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.btn--outline:hover {
+  border-color: var(--ink);
+}
+
+.btn--unlock {
+  overflow: hidden;
+  min-height: 52px;
+  padding: 0 26px;
+  font-size: 15.5px;
+}
+
+.btn--unlock:disabled {
+  cursor: progress;
+}
+
+.btn__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform-origin: 0 50%;
+}
+
+.btn__labels {
+  position: relative;
+  display: grid;
+  justify-items: center;
+}
+
+.btn__labels > * {
+  grid-area: 1 / 1;
+}
+
+.btn__counter {
+  font-variant-numeric: tabular-nums;
+}
