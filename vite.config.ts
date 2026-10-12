@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 // The CV links only render when the PDF is actually shipped, so the live
 // site never points at a 404.
@@ -13,9 +13,15 @@ if (!hasCv) {
 }
 
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [react()],
   define: {
     __CV_FILE__: JSON.stringify(hasCv ? CV_FILE : ''),
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
+    css: false,
+    restoreMocks: true,
   },
 });

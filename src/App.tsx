@@ -7,14 +7,17 @@ import { profile } from './content';
 import { rise } from './motion';
 import { useUnlock, type Phase } from './useUnlock';
 
-// `/#unlocked` opens the page with the profile already revealed.
-const startUnlocked = typeof window !== 'undefined' && window.location.hash === '#unlocked';
-
 export function App() {
-  const { phase, progress, unlock, lock } = useUnlock(startUnlocked);
+  const { phase, progress, unlock, reveal, lock } = useUnlock();
   const unlockRef = useRef<HTMLButtonElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const prevPhase = useRef<Phase>(phase);
+
+  // `/#unlocked` opens the page with the profile already revealed. Read after hydration
+  // so the prerendered HTML and the first client render match.
+  useEffect(() => {
+    if (window.location.hash === '#unlocked') reveal();
+  }, [reveal]);
 
   // The control that had focus goes inert on each transition, so hand focus to the new view.
   useEffect(() => {

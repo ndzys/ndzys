@@ -22,3 +22,6 @@ export const unlockLog = [
   { at: 84, text: 'tree-shaking buzzwords · 0 found' },
   { at: 99, text: 'ready · full potential unlocked' },
 ] as const;
+
+/** Number of log lines printed by the time progress reaches `value`. */
+export const logLinesAt = (value: number) => unlockLog.filter((l) => value >= l.at).length;
