@@ -579,6 +579,7 @@ a:hover {
     flex-direction: column;
     align-items: stretch;
     gap: 24px;
+    max-width: 560px;
   }
 
   .page[data-phase='unlocked'] .header__cv {
@@ -586,8 +587,7 @@ a:hover {
   }
 
   .portrait {
-    width: 100%;
-    max-width: 560px;
+    width: min(100%, 48svh, 420px);
     min-width: 0;
     margin: 0;
   }
@@ -670,16 +670,6 @@ a:hover {
     margin-top: 20px;
   }
 
-  .actions .btn {
-    flex: 1;
-    justify-content: center;
-  }
-
-  .contacts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
-  }
 
   .contacts__play {
     margin-left: 0;
@@ -706,5 +696,18 @@ a:hover {
 
   .game__close {
     margin-left: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
   }
 }

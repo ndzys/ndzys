@@ -73,4 +73,22 @@ describe('App', () => {
     await user.keyboard('{ArrowUp}{ArrowUp}{ArrowDown}{ArrowDown}{ArrowLeft}{ArrowRight}{ArrowLeft}{ArrowRight}ba');
     expect(await screen.findByRole('dialog', { name: 'Ship it!' })).toBeInTheDocument();
   });
+
+  it('keeps the URL in sync with the unlocked state', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(unlockButton());
+    await screen.findByRole('heading', { name: 'Nazar Dzys' });
+    expect(window.location.hash).toBe('#unlocked');
+
+    await user.click(screen.getByRole('button', { name: /lock again/i }));
+    await waitFor(() => expect(window.location.hash).toBe(''));
+  });
+
+  it('unlocks when the hash changes in an open tab', async () => {
+    render(<App />);
+    window.location.hash = '#unlocked';
+    expect(await screen.findByRole('heading', { name: 'Nazar Dzys' })).toBeInTheDocument();
+  });
 });

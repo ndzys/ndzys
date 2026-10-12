@@ -10,6 +10,7 @@ import { useKonami } from './useKonami';
 import { useUnlock, type Phase } from './useUnlock';
 
 const ShipIt = lazy(loadGame);
+const UNLOCKED_HASH = '#unlocked';
 
 export function App() {
   const { phase, progress, unlock, reveal, lock } = useUnlock();
@@ -32,8 +33,19 @@ export function App() {
   useKonami(openGame);
 
   useEffect(() => {
-    if (window.location.hash === '#unlocked') reveal();
+    const syncFromUrl = () => {
+      if (window.location.hash === UNLOCKED_HASH) reveal();
+    };
+    syncFromUrl();
+    window.addEventListener('hashchange', syncFromUrl);
+    return () => window.removeEventListener('hashchange', syncFromUrl);
   }, [reveal]);
+
+  useEffect(() => {
+    const { hash, pathname, search } = window.location;
+    if (phase === 'unlocked' && hash !== UNLOCKED_HASH) window.history.replaceState(null, '', UNLOCKED_HASH);
+    if (phase === 'locked' && hash === UNLOCKED_HASH) window.history.replaceState(null, '', pathname + search);
+  }, [phase]);
 
   useEffect(() => {
     const prev = prevPhase.current;
