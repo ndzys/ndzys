@@ -1,6 +1,6 @@
 import { motion, useTransform, type MotionValue } from 'motion/react';
+import portrait400 from '../assets/portrait-400.webp';
 import portrait760 from '../assets/portrait-760.webp';
-import portrait1254 from '../assets/portrait-1254.webp';
 import portraitTiny from '../assets/portrait-tiny.webp';
 import { LOCKED_CLIP, rise } from '../motion';
 import type { Phase } from '../useUnlock';
@@ -46,11 +46,11 @@ export function Portrait({ phase, progress }: Props) {
         <motion.img
           className="portrait__photo"
           src={portrait760}
-          srcSet={`${portrait760} 760w, ${portrait1254} 1254w`}
+          srcSet={`${portrait400} 400w, ${portrait760} 760w`}
           sizes="(max-width: 640px) 70vw, 380px"
           alt="Portrait of Nazar Dzys"
-          width={1254}
-          height={1254}
+          width={760}
+          height={760}
           fetchPriority="high"
           style={{ clipPath }}
         />
