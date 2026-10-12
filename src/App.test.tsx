@@ -8,7 +8,7 @@ const unlockButton = () => screen.getByRole('button', { name: /unlock full poten
 describe('App', () => {
   it('renders the locked hero', () => {
     render(<App />);
-    expect(screen.getByRole('heading', { level: 1, name: /hire me to unlock my full potential/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: /hire me to unlock your team's full potential/i })).toBeInTheDocument();
     expect(unlockButton()).toBeEnabled();
     expect(screen.getByRole('link', { name: /download cv/i })).toHaveAttribute('href', '/Nazar_Dzys_CV.pdf');
     expect(screen.queryByRole('heading', { name: 'Nazar Dzys' })).not.toBeInTheDocument();

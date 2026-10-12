@@ -6,8 +6,13 @@ const read = (path: string) => readFileSync(new URL(`../${path}`, import.meta.ur
 const html = read('index.html');
 const SITE = 'https://nazardzys.nvsoftlab.com/';
 
-const meta = (attr: 'name' | 'property', key: string) =>
-  html.match(new RegExp(`<meta ${attr}="${key}" content="([^"]*)"`))?.[1];
+const decode = (text: string) =>
+  text.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
+const meta = (attr: 'name' | 'property', key: string) => {
+  const value = html.match(new RegExp(`<meta ${attr}="${key}" content="([^"]*)"`))?.[1];
+  return value === undefined ? undefined : decode(value);
+};
 
 describe('SEO', () => {
   it('has a descriptive title and meta description', () => {

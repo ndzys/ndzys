@@ -4,7 +4,7 @@ export const profile = {
   lastName: 'Dzys',
   role: 'Senior Frontend Engineer & Team Lead',
   stack: 'React / TypeScript',
-  bio: 'Frontend engineer and team lead with 10 years in web development. I focus on React architecture, design systems and performance. Co-founder of NVSOFTLAB, where I build mobile products end to end.',
+  bio: 'I help product teams ship faster without breaking things: React architecture, design systems, performance. 10 years in web, now leading a frontend team on a high-traffic e-commerce platform. Co-founder of NVSOFTLAB.',
   location: 'Wrocław, Poland · Remote EU / hybrid',
   email: 'nazardzys@gmail.com',
   phone: { label: '+48 514 063 561', href: 'tel:+48514063561' },

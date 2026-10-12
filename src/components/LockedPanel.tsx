@@ -30,7 +30,7 @@ export function LockedPanel({ phase, progress, onUnlock, buttonRef }: Props) {
         {profile.role}
       </motion.p>
       <motion.h1 className="headline" {...rise(450)}>
-        Hire me to unlock my full potential.
+        Hire me to unlock your team's full potential.
       </motion.h1>
 
       <motion.div className="status" {...rise(550)}>
