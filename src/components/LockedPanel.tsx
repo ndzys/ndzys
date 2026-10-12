@@ -48,6 +48,7 @@ export function LockedPanel({ phase, progress, onUnlock, buttonRef }: Props) {
               <Shimmer width="100%" />
               <Shimmer width="88%" />
               <Shimmer width="64%" />
+              <span className="status__file">about.md · locked</span>
             </motion.div>
           ) : (
             <Terminal key="terminal" live={phase === 'loading'} progress={progress} />

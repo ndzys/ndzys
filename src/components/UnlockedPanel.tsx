@@ -1,6 +1,7 @@
 import { motion, type Variants } from 'motion/react';
 import type { Ref } from 'react';
 import { profile } from '../content';
+import { loadGame } from '../game/load';
 import { easeOutExpo } from '../motion';
 
 const item: Variants = {
@@ -23,9 +24,9 @@ const nameLine: Variants = {
 
 const lift = { y: -2, transition: { duration: 0.25, ease: 'easeOut' } } as const;
 
-type Props = { shown: boolean; headingRef: Ref<HTMLHeadingElement> };
+type Props = { shown: boolean; headingRef: Ref<HTMLHeadingElement>; onPlay: () => void };
 
-export function UnlockedPanel({ shown, headingRef }: Props) {
+export function UnlockedPanel({ shown, headingRef, onPlay }: Props) {
   return (
     <motion.div
       className={`panel${shown ? '' : ' panel--inactive'}`}
@@ -35,7 +36,9 @@ export function UnlockedPanel({ shown, headingRef }: Props) {
       animate={shown ? 'shown' : 'hidden'}
     >
       <motion.p className="eyebrow" variants={item} custom={500}>
-        {profile.role} · {profile.stack}
+        {profile.role}
+        <span className="eyebrow__sep"> · </span>
+        <span className="eyebrow__stack">{profile.stack}</span>
       </motion.p>
 
       <h1 className="name" ref={headingRef} tabIndex={-1}>
@@ -73,6 +76,11 @@ export function UnlockedPanel({ shown, headingRef }: Props) {
           <a href={profile.github} target="_blank" rel="noopener noreferrer">
             GitHub ↗
           </a>
+        </li>
+        <li className="contacts__play">
+          <button type="button" onClick={onPlay} onPointerEnter={loadGame} onFocus={loadGame}>
+            ▶ Mini-game
+          </button>
         </li>
       </motion.ul>
     </motion.div>

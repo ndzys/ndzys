@@ -1,17 +1,35 @@
 import { AnimatePresence, motion, MotionConfig } from 'motion/react';
-import { useEffect, useRef } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { LockedPanel } from './components/LockedPanel';
 import { Portrait } from './components/Portrait';
 import { UnlockedPanel } from './components/UnlockedPanel';
 import { profile } from './content';
+import { loadGame } from './game/load';
 import { rise } from './motion';
+import { useKonami } from './useKonami';
 import { useUnlock, type Phase } from './useUnlock';
+
+const ShipIt = lazy(loadGame);
 
 export function App() {
   const { phase, progress, unlock, reveal, lock } = useUnlock();
   const unlockRef = useRef<HTMLButtonElement>(null);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const prevPhase = useRef<Phase>(phase);
+  const [playing, setPlaying] = useState(false);
+  const returnFocus = useRef<HTMLElement | null>(null);
+
+  const openGame = useCallback(() => {
+    returnFocus.current = document.activeElement as HTMLElement | null;
+    setPlaying(true);
+  }, []);
+
+  const closeGame = useCallback(() => {
+    setPlaying(false);
+    returnFocus.current?.focus({ preventScroll: true });
+  }, []);
+
+  useKonami(openGame);
 
   useEffect(() => {
     if (window.location.hash === '#unlocked') reveal();
@@ -58,10 +76,23 @@ export function App() {
             <Portrait phase={phase} progress={progress} />
             <div className="panels">
               <LockedPanel phase={phase} progress={progress} onUnlock={unlock} buttonRef={unlockRef} />
-              <UnlockedPanel shown={phase === 'unlocked'} headingRef={nameRef} />
+              <UnlockedPanel shown={phase === 'unlocked'} headingRef={nameRef} onPlay={openGame} />
             </div>
           </div>
         </main>
+
+        <motion.footer className="footer" {...rise(800)}>
+          <span suppressHydrationWarning>© {new Date().getFullYear()} {profile.name}</span>
+          <span>Built with React, TypeScript & Motion</span>
+        </motion.footer>
+
+        <AnimatePresence>
+          {playing && (
+            <Suspense key="game" fallback={null}>
+              <ShipIt onClose={closeGame} />
+            </Suspense>
+          )}
+        </AnimatePresence>
 
         <p className="sr-only" aria-live="polite">
           {phase === 'unlocked' ? 'Profile unlocked' : ''}
