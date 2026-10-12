@@ -19,6 +19,10 @@ if (typeof window !== 'undefined' && !window.matchMedia) {
     }) as MediaQueryList;
 }
 
+if (typeof HTMLCanvasElement !== 'undefined') {
+  HTMLCanvasElement.prototype.getContext = (() => null) as typeof HTMLCanvasElement.prototype.getContext;
+}
+
 afterEach(() => {
   cleanup();
   if (typeof window !== 'undefined') window.history.replaceState(null, '', '/');

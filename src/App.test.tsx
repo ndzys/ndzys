@@ -52,4 +52,25 @@ describe('App', () => {
     await waitFor(() => expect(unlockButton()).toHaveFocus());
     expect(screen.queryByRole('heading', { name: 'Nazar Dzys' })).not.toBeInTheDocument();
   });
+
+  it('opens the mini-game and closes it with Escape', async () => {
+    const user = userEvent.setup();
+    window.history.replaceState(null, '', '/#unlocked');
+    render(<App />);
+
+    const play = await screen.findByRole('button', { name: /mini-game/i });
+    await user.click(play);
+    expect(await screen.findByRole('dialog', { name: 'Ship it!' })).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(play).toHaveFocus();
+  });
+
+  it('opens the mini-game with the Konami code', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.keyboard('{ArrowUp}{ArrowUp}{ArrowDown}{ArrowDown}{ArrowLeft}{ArrowRight}{ArrowLeft}{ArrowRight}ba');
+    expect(await screen.findByRole('dialog', { name: 'Ship it!' })).toBeInTheDocument();
+  });
 });
