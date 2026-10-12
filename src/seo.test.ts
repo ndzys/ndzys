@@ -14,7 +14,7 @@ describe('SEO', () => {
     expect(html).toMatch(/<title>Nazar Dzys · [^<]+<\/title>/);
     const description = meta('name', 'description') ?? '';
     expect(description.length).toBeGreaterThanOrEqual(70);
-    expect(description.length).toBeLessThanOrEqual(170);
+    expect(description.length).toBeLessThanOrEqual(160);
   });
 
   it('declares language and canonical URL', () => {
