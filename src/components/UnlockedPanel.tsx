@@ -29,7 +29,7 @@ type Props = { shown: boolean; headingRef: Ref<HTMLHeadingElement> };
 export function UnlockedPanel({ shown, headingRef }: Props) {
   return (
     <motion.div
-      className="panel"
+      className={`panel${shown ? '' : ' panel--inactive'}`}
       inert={!shown}
       style={{ visibility: shown ? 'visible' : 'hidden' }}
       initial="hidden"
@@ -40,10 +40,10 @@ export function UnlockedPanel({ shown, headingRef }: Props) {
       </motion.p>
 
       <h1 className="name" ref={headingRef} tabIndex={-1}>
-        <motion.span className="name__line" variants={nameLine} custom={600}>
+        <motion.span className="name__word" variants={nameLine} custom={600}>
           {profile.firstName}
-        </motion.span>
-        <motion.span className="name__line serif" variants={nameLine} custom={700}>
+        </motion.span>{' '}
+        <motion.span className="name__word" variants={nameLine} custom={680}>
           {profile.lastName}
         </motion.span>
       </h1>
@@ -61,12 +61,12 @@ export function UnlockedPanel({ shown, headingRef }: Props) {
             Download CV ↓
           </motion.a>
         )}
-        <motion.a className="btn btn--outline" href={`mailto:${profile.email}`} whileHover={lift} whileTap={{ scale: 0.97 }}>
-          {profile.email}
-        </motion.a>
       </motion.div>
 
       <motion.ul className="contacts" variants={item} custom={980}>
+        <li>
+          <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        </li>
         <li>
           <a href={profile.phone.href}>{profile.phone.label}</a>
         </li>

@@ -1,20 +1,18 @@
 import { motion, useMotionValueEvent, useReducedMotion, type MotionValue } from 'motion/react';
 import { useState } from 'react';
-import { unlockLog } from '../content';
+import { logLinesAt, unlockLog } from '../content';
 import { easeOutExpo } from '../motion';
-
-const linesAt = (v: number) => unlockLog.filter((l) => v >= l.at).length;
 
 type Props = { live: boolean; progress: MotionValue<number> };
 
 /** Fake build log that prints a line each time progress crosses a threshold. */
 export function Terminal({ live, progress }: Props) {
   const reduceMotion = useReducedMotion();
-  const [count, setCount] = useState(() => linesAt(progress.get()));
+  const [count, setCount] = useState(() => logLinesAt(progress.get()));
 
   // Only follow progress while unlocking, so the log stays frozen while it fades out.
   useMotionValueEvent(progress, 'change', (v) => {
-    if (live) setCount(linesAt(v));
+    if (live) setCount(logLinesAt(v));
   });
 
   return (

@@ -19,7 +19,7 @@ export function LockedPanel({ phase, progress, onUnlock, buttonRef }: Props) {
 
   return (
     <motion.div
-      className="panel"
+      className={`panel panel--locked${gone ? ' panel--inactive' : ''}`}
       // `inert` already removes it from focus and the a11y tree; avoiding Motion-driven
       // `visibility` keeps the unlock button focusable in the same commit it returns.
       inert={gone}
@@ -32,7 +32,7 @@ export function LockedPanel({ phase, progress, onUnlock, buttonRef }: Props) {
         {profile.role}
       </motion.p>
       <motion.h1 className="headline" {...rise(450)}>
-        Hire me to unlock my <em className="serif">full potential</em>.
+        Hire me to unlock my <em className="accent">full potential</em>.
       </motion.h1>
 
       <motion.div className="status" {...rise(550)}>
