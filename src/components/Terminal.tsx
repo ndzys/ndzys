@@ -5,12 +5,10 @@ import { easeOutExpo } from '../motion';
 
 type Props = { live: boolean; progress: MotionValue<number> };
 
-/** Fake build log that prints a line each time progress crosses a threshold. */
 export function Terminal({ live, progress }: Props) {
   const reduceMotion = useReducedMotion();
   const [count, setCount] = useState(() => logLinesAt(progress.get()));
 
-  // Only follow progress while unlocking, so the log stays frozen while it fades out.
   useMotionValueEvent(progress, 'change', (v) => {
     if (live) setCount(logLinesAt(v));
   });

@@ -10,8 +10,7 @@ describe('App', () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 1, name: /hire me to unlock my full potential/i })).toBeInTheDocument();
     expect(unlockButton()).toBeEnabled();
-    expect(screen.getByRole('link', { name: /download cv/i })).toHaveAttribute('href', '/nazar-dzys-cv.pdf');
-    // The profile stays out of the accessibility tree until unlocked.
+    expect(screen.getByRole('link', { name: /download cv/i })).toHaveAttribute('href', '/Nazar_Dzys_CV.pdf');
     expect(screen.queryByRole('heading', { name: 'Nazar Dzys' })).not.toBeInTheDocument();
   });
 

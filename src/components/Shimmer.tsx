@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
 
-/** Skeleton bar with a sweeping highlight. */
 export function Shimmer({ width }: { width: string }) {
   const reduceMotion = useReducedMotion();
   return (

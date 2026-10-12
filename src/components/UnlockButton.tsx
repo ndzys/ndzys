@@ -35,7 +35,6 @@ export function UnlockButton({ loading, progress, onUnlock, ref }: Props) {
         animate={{ opacity: loading ? 1 : 0 }}
         transition={{ duration: loading ? 0 : 0.3 }}
       />
-      {/* Both labels share one grid cell so the button keeps its width while they swap. */}
       <span className="btn__labels">
         <motion.span
           aria-hidden={loading}

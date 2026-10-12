@@ -10,6 +10,5 @@ const app = (
   </StrictMode>
 );
 
-// Production HTML is prerendered (see scripts/prerender.mjs); the dev server serves an empty root.
 if (container.hasChildNodes()) hydrateRoot(container, app);
 else createRoot(container).render(app);

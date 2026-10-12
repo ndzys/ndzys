@@ -3,7 +3,6 @@ import type { Ref } from 'react';
 import { profile } from '../content';
 import { easeOutExpo } from '../motion';
 
-/** Hides instantly, reveals with a per-item delay (ms) passed through `custom`. */
 const item: Variants = {
   hidden: { opacity: 0, y: 16, transition: { duration: 0 } },
   shown: (delayMs: number) => ({

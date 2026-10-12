@@ -57,11 +57,6 @@ a:hover {
   color: #fff;
 }
 
-.accent {
-  font-style: normal;
-  color: var(--accent);
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -70,8 +65,6 @@ a:hover {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
-
-/* ── Layout ─────────────────────────────────────────── */
 
 .page {
   position: relative;
@@ -107,7 +100,6 @@ a:hover {
 .header__lock {
   background: none;
   border: 0;
-  /* Bigger hit area without making the header taller when it appears. */
   padding: 6px 0;
   margin: -6px 0;
   font: inherit;
@@ -154,8 +146,6 @@ a:hover {
   align-self: center;
 }
 
-/* ── Portrait ───────────────────────────────────────── */
-
 .portrait {
   position: relative;
   flex: 0 0 auto;
@@ -170,12 +160,10 @@ a:hover {
   border-radius: 28px;
   overflow: hidden;
   background: var(--photo-bg);
-  /* Keeps the rounded clip crisp in Safari while children transform. */
   isolation: isolate;
 }
 
 .portrait__pending {
-  /* A touch darker than the page skeleton so the bars read on the photo backdrop. */
   --sk: #e0ddd6;
   position: absolute;
   inset: 46% 0 0;
@@ -244,8 +232,6 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Skeleton ───────────────────────────────────────── */
-
 .shimmer {
   display: block;
   height: 14px;
@@ -254,8 +240,6 @@ a:hover {
   background-size: 250% 100%;
   background-position: 150% 0%;
 }
-
-/* ── Panels ─────────────────────────────────────────── */
 
 .eyebrow {
   margin: 0 0 18px;
@@ -399,8 +383,6 @@ a:hover {
   text-decoration: none;
 }
 
-/* ── Buttons ────────────────────────────────────────── */
-
 .btn {
   position: relative;
   display: inline-flex;
@@ -465,9 +447,6 @@ a:hover {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Mobile / narrow tablet ─────────────────────────── */
-
-/* Below this width the two-column hero would wrap anyway, so commit to one column. */
 @media (max-width: 760px) {
   .header {
     padding: 16px 20px;
@@ -506,7 +485,6 @@ a:hover {
     text-overflow: ellipsis;
   }
 
-  /* Only the active panel takes up space; the other overlays it while fading out. */
   .panels {
     position: relative;
   }
@@ -520,7 +498,6 @@ a:hover {
     inset: 0 0 auto;
   }
 
-  /* Call to action first, log/skeleton below it, so the button stays above the fold. */
   .panel--locked {
     display: flex;
     flex-direction: column;

@@ -7,14 +7,8 @@ export type Phase = 'locked' | 'loading' | 'unlocked';
 const UNLOCK_DURATION = 2.6;
 const SETTLE_MS = 450;
 
-/** Linear progress with a small decaying wobble so the counter feels like real work. */
 export const wobble = (p: number) => p + Math.sin(p * Math.PI * 3) * 0.035 * (1 - p);
 
-/**
- * Drives the locked → loading → unlocked sequence. Progress (0–100) lives in a
- * MotionValue so the per-frame portrait reveal, scan line and counters update
- * without re-rendering React.
- */
 export function useUnlock() {
   const [phase, setPhase] = useState<Phase>('locked');
   const progress = useMotionValue(0);
@@ -49,7 +43,6 @@ export function useUnlock() {
     });
   }, [phase, progress, reduceMotion, stop]);
 
-  /** Jump straight to the unlocked state (deep links). */
   const reveal = useCallback(() => {
     stop();
     progress.set(100);

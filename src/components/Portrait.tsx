@@ -8,13 +8,12 @@ import { Shimmer } from './Shimmer';
 
 type Props = { phase: Phase; progress: MotionValue<number> };
 
-/** Hidden share of the photo (in %) for a given progress. */
 const clipAt = (v: number) => LOCKED_CLIP * (1 - v / 100);
 
 export function Portrait({ phase, progress }: Props) {
   const clipPath = useTransform(progress, (v) => `inset(0 0 ${clipAt(v).toFixed(2)}% 0)`);
   const scanY = useTransform(progress, (v) => `${(100 - clipAt(v)).toFixed(2)}%`);
-  const badge = useTransform(progress, (v) => `portrait.png · ${Math.round(46 + v * 0.54)}%`);
+  const badge = useTransform(progress, (v) => `candidate.webp · ${Math.round(46 + v * 0.54)}%`);
   const loading = phase === 'loading';
 
   return (
@@ -30,7 +29,7 @@ export function Portrait({ phase, progress }: Props) {
           <Shimmer width="60%" />
           <Shimmer width="82%" />
           <Shimmer width="45%" />
-          <span className="portrait__file">portrait.png · 46% loaded</span>
+          <span className="portrait__file">candidate.webp · 46% loaded</span>
         </motion.div>
 
         <motion.img

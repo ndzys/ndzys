@@ -12,7 +12,6 @@ export const profile = {
   cvUrl: __CV_FILE__ ? `${import.meta.env.BASE_URL}${__CV_FILE__}` : null,
 } as const;
 
-/** Terminal lines printed while unlocking; `at` is the progress (0–100) that reveals each one. */
 export const unlockLog = [
   { at: 4, text: 'resolving 10 years of web development' },
   { at: 20, text: 'linking React · TypeScript · GraphQL' },
@@ -23,5 +22,4 @@ export const unlockLog = [
   { at: 99, text: 'ready · full potential unlocked' },
 ] as const;
 
-/** Number of log lines printed by the time progress reaches `value`. */
 export const logLinesAt = (value: number) => unlockLog.filter((l) => value >= l.at).length;

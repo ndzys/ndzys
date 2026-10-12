@@ -28,6 +28,6 @@ describe('profile', () => {
   });
 
   it('ships the CV from the site root', () => {
-    expect(profile.cvUrl).toBe('/nazar-dzys-cv.pdf');
+    expect(profile.cvUrl).toBe('/Nazar_Dzys_CV.pdf');
   });
 });

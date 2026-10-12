@@ -1,5 +1,3 @@
-// Injects the server-rendered markup into dist/index.html so crawlers and link
-// previews get real content without running JavaScript.
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 

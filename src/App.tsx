@@ -13,13 +13,10 @@ export function App() {
   const nameRef = useRef<HTMLHeadingElement>(null);
   const prevPhase = useRef<Phase>(phase);
 
-  // `/#unlocked` opens the page with the profile already revealed. Read after hydration
-  // so the prerendered HTML and the first client render match.
   useEffect(() => {
     if (window.location.hash === '#unlocked') reveal();
   }, [reveal]);
 
-  // The control that had focus goes inert on each transition, so hand focus to the new view.
   useEffect(() => {
     const prev = prevPhase.current;
     prevPhase.current = phase;

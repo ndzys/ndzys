@@ -7,6 +7,6 @@ describe('prerender', () => {
     const html = render();
     expect(html).toContain('Hire me to unlock my');
     expect(html).toContain('Nazar Dzys');
-    expect(html).toContain('/nazar-dzys-cv.pdf');
+    expect(html).toContain('/Nazar_Dzys_CV.pdf');
   });
 });

@@ -3,13 +3,11 @@ import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 
-// The CV links only render when the PDF is actually shipped, so the live
-// site never points at a 404.
-const CV_FILE = 'nazar-dzys-cv.pdf';
+const CV_FILE = 'Nazar_Dzys_CV.pdf';
 const hasCv = existsSync(fileURLToPath(new URL(`./public/${CV_FILE}`, import.meta.url)));
 
 if (!hasCv) {
-  console.warn(`\n[ndzys] public/${CV_FILE} not found — "Download CV" links are hidden.\n`);
+  console.warn(`public/${CV_FILE} not found, CV links will be hidden`);
 }
 
 export default defineConfig({
