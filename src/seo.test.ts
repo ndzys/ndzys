@@ -39,7 +39,7 @@ describe('SEO', () => {
     expect(person['@type']).toBe('Person');
     expect(person.name).toBe('Nazar Dzys');
     expect(person.url).toBe(SITE);
-    expect(person.sameAs).toContain('https://github.com/ndzys');
+    expect(person.sameAs).toEqual(['https://github.com/ndzys', 'https://www.linkedin.com/in/nazar-dzys/']);
   });
 
   it('exposes robots.txt and a sitemap for the canonical URL', () => {

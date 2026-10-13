@@ -77,6 +77,11 @@ export function UnlockedPanel({ shown, headingRef, onPlay }: Props) {
             GitHub ↗
           </a>
         </li>
+        <li>
+          <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+            LinkedIn ↗
+          </a>
+        </li>
         <li className="contacts__play">
           <button type="button" onClick={onPlay} onPointerEnter={loadGame} onFocus={loadGame}>
             ▶ Mini-game

@@ -24,6 +24,7 @@ describe('profile', () => {
   it('links to the real contact channels', () => {
     expect(profile.email).toBe('nazardzys@gmail.com');
     expect(profile.github).toBe('https://github.com/ndzys');
+    expect(profile.linkedin).toBe('https://www.linkedin.com/in/nazar-dzys/');
     expect(profile.phone.href).toMatch(/^tel:\+48\d{9}$/);
   });
 

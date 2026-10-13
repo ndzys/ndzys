@@ -39,7 +39,9 @@ describe('App', () => {
     const github = within(list).getByRole('link', { name: /github/i });
     expect(github).toHaveAttribute('href', 'https://github.com/ndzys');
     expect(github).toHaveAttribute('rel', expect.stringContaining('noopener'));
-    expect(screen.queryByText(/linkedin/i)).not.toBeInTheDocument();
+    const linkedin = within(list).getByRole('link', { name: /linkedin/i });
+    expect(linkedin).toHaveAttribute('href', 'https://www.linkedin.com/in/nazar-dzys/');
+    expect(linkedin).toHaveAttribute('rel', expect.stringContaining('noopener'));
   });
 
   it('locks again and returns focus to the unlock button', async () => {

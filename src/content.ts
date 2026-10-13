@@ -9,6 +9,7 @@ export const profile = {
   email: 'nazardzys@gmail.com',
   phone: { label: '+48 514 063 561', href: 'tel:+48514063561' },
   github: 'https://github.com/ndzys',
+  linkedin: 'https://www.linkedin.com/in/nazar-dzys/',
   cvUrl: __CV_FILE__ ? `${import.meta.env.BASE_URL}${__CV_FILE__}` : null,
 } as const;
 
